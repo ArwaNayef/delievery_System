@@ -6,27 +6,33 @@ use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
-    public function verify($user_id, Request $request) {
-        if (!$request->hasValidSignature()) {
-            return response()->json(["msg" => "Invalid/Expired url provided."], 401);
+    public function sendVerificationEmail(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return [
+                'message' => 'Already Verified'
+            ];
         }
-    
-        $user = User::findOrFail($user_id);
-    
-        if (!$user->hasVerifiedEmail()) {
-            $user->markEmailAsVerified();
-        }
-    
-        return redirect()->to('/');
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return ['status' => 'verification-link-sent'];
     }
-    
-    public function resend() {
-        if (auth()->user()->hasVerifiedEmail()) {
-            return response()->json(["msg" => "Email already verified."], 400);
+
+    public function verify(EmailVerificationRequest $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return [
+                'message' => 'Email already verified'
+            ];
         }
-    
-        auth()->user()->sendEmailVerificationNotification();
-    
-        return response()->json(["msg" => "Email verification link sent on your email id"]);
+
+        if ($request->user()->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+        }
+
+        return [
+            'message'=>'Email has been verified'
+        ];
     }
 }

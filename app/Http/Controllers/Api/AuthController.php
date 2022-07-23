@@ -26,7 +26,7 @@ class AuthController extends Controller
             return response()-> json([
                 'message'=> 'validation fails',
                 'errors'=>$validator->errors()
-            ],422);   
+            ],422);
         }
 
         $user=User::create([
@@ -37,31 +37,45 @@ class AuthController extends Controller
         ]
         );
         event(new Registered($user));
-       // User::create($request->getAttributes())->sendEmailVerificationNotification();
-        
+        $token = $user->createToken('authtoken');
+        // User::create($request->getAttributes())->sendEmailVerificationNotification();
+
         return response()-> json([
             'message'=> 'Registration successfully',
-            'data'=>$user
-        ],200);  
-    
+            'data'=> ['token' => $token->plainTextToken, 'user' => $user]
+        ],200);
+
 }
 
 public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
- 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('dashboard');
+        if (!Auth::attempt($request->only('email', 'password')))
+        {
+            return response()
+                ->json(['message' => 'Unauthorized'], 401);
         }
- 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
- 
+
+        $user = User::where('email', $request['email'])->firstOrFail();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()
+            ->json(['message' => 'Hi '.$user->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', ]);
+
+
     }
+    public function logout(Request $request)
+    {
+
+        $request->user()->tokens()->delete();
+
+        return response()->json(
+            [
+                'message' => 'Logged out'
+            ]
+        );
+
+    }
+
 }
 

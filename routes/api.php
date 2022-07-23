@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-//use app\Http\Controllers\Auth\CodeCheckController;
-//use App\Http\Controllers\Auth\ResetPasswordController;
+
 
 
 
@@ -27,9 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/auth/register/', [AuthController::class, 'register']);
 Route::post('/auth/login/', [AuthController::class, 'login']);
-
-//Route::post('password/email',  ForgotPasswordController::class);
-//Route::post('password/code/check', CodeCheckController::class);
-//Route::post('password/reset', ResetPasswordController::class);
-
+Route::post('/auth/logout/', [AuthController::class, 'logout']);
 Route::post('forgotPassword', [ForgotPasswordController::class, 'forgotPassword']);
+
+Route::post('email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])->middleware('auth:sanctum');
+Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:sanctum');
