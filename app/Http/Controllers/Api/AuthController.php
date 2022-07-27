@@ -11,10 +11,11 @@ use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Auth\Events\Registered;
 use Hash;
+use SebastianBergmann\CodeCoverage\Driver\Driver;
 
 class AuthController extends Controller
 {
-    public function register(Request $request){
+    public function CustomerRegister(Request $request){
         $validator=Validator::make($request->all(),[
             'name'=> 'required|min:2||max:100',
             'phone_number' => 'required|numeric|digits:10',
@@ -37,7 +38,7 @@ class AuthController extends Controller
         ]
         );
         event(new Registered($user));
-        $token = $user->createToken('authtoken');
+        $token = $user->createToken('auth_token');
         // User::create($request->getAttributes())->sendEmailVerificationNotification();
 
         return response()-> json([
@@ -47,8 +48,9 @@ class AuthController extends Controller
 
 }
 
-public function login(Request $request)
+public function CustomerLogin(Request $request)
     {
+        //تدخيل بيانات خاطئة
         if (!Auth::attempt($request->only('email', 'password')))
         {
             return response()
@@ -60,11 +62,11 @@ public function login(Request $request)
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()
-            ->json(['message' => 'Hi '.$user->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', ]);
+            ->json(['message' => 'Hi '.$user->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', 'id'=> $user->id]);
 
 
     }
-    public function logout(Request $request)
+    public function CustomerLogout(Request $request)
     {
 
         $request->user()->tokens()->delete();
@@ -74,6 +76,24 @@ public function login(Request $request)
                 'message' => 'Logged out'
             ]
         );
+
+    }
+    public function DriverLogin(Request $request)
+    {
+        //تدخيل بيانات خاطئة
+        if (!Auth::attempt($request->only('phone', 'password')))
+        {
+            return response()
+                ->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $driver = Driver::where('phone', $request['phone'])->firstOrFail();
+
+        $token = $driver->createToken('auth_token')->plainTextToken;
+
+        return response()
+            ->json(['message' => 'Hi '.$driver->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', 'id'=> $driver->id]);
+
 
     }
 

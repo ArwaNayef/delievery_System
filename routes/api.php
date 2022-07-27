@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
-
-
 
 
 /*
@@ -24,10 +24,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/auth/register/', [AuthController::class, 'register']);
-Route::post('/auth/login/', [AuthController::class, 'login']);
-Route::post('/auth/logout/', [AuthController::class, 'logout']);
+Route::post('/auth/customer/register/', [AuthController::class, 'CustomerRegister']);
+Route::post('/auth/driver/login/', [AuthController::class, 'DriverLogin']);
+Route::post('/auth/customer/login/', [AuthController::class, 'CustomerLogin']);
+Route::post('/auth/customer/logout/', [AuthController::class, 'CustomerLogout']);
 Route::post('forgotPassword', [ForgotPasswordController::class, 'forgotPassword']);
 
 Route::post('email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])->middleware('auth:sanctum');
 Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify')->middleware('auth:sanctum');
+
+Route::get('show', [OrderController::class, 'ordersByClient'])->middleware('auth:sanctum');
+Route::get('store', [OrderController::class, 'store'])->middleware('auth:sanctum');
+Route::get('ShowProfile', [UserController::class, 'ShowProfile'])->middleware('auth:sanctum');
+Route::get('EditProfile', [UserController::class, 'EditProfile'])->middleware('auth:sanctum');
+
