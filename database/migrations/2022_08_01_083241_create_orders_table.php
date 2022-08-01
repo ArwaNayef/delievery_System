@@ -11,7 +11,6 @@ class CreateOrdersTable extends Migration
      *
      * @return void
      */
-
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
@@ -23,13 +22,11 @@ class CreateOrdersTable extends Migration
             $table->string('from_address');
             $table->string('to_address');
             $table->time('time_to_deliver');
-            $table->unsignedInteger('driver_id')->nullable();
+            $table->unsignedBigInteger('driver_id')->nullable();
             $table->enum('status', ['pending', 'in_progress', 'arrived', 'finished'])->default('pending');
             $table->foreign('driver_id')->references('id')->on('drivers');
-
         });
     }
-
 
     /**
      * Reverse the migrations.

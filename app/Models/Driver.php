@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class driver extends Authenticatable
+class Driver extends Model
 {
     use HasFactory;
-
+    protected $guard = 'driver';
     protected $fillable = [
         'name',
         'email',

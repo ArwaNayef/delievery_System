@@ -11,6 +11,28 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function index(Request $request)
+    {
+        $users = User::select("*")
+            ->paginate(10);
+
+        return view('users', compact('users'));
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function sendEmail(Request $request)
+    {
+        $users = User::whereIn("id", $request->ids)->get();
+
+        Mail::to($users)->send(new UserEmail());
+        return response()->json(['success'=>'Send email successfully.']);
+
+    }
+
     public function ShowProfile()
     {
         $id = Auth::id();
@@ -36,4 +58,11 @@ class UserController extends Controller
                 ]
             );
     }
+    public function AddAdress(Request $request)
+    {
+        $id = Auth::id();
+
+    }
+
+
 }

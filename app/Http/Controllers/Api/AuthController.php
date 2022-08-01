@@ -80,19 +80,20 @@ public function CustomerLogin(Request $request)
     }
     public function DriverLogin(Request $request)
     {
-        //تدخيل بيانات خاطئة
-        if (!Auth::attempt($request->only('phone', 'password')))
+
+        if (!Auth::guard('driver')->attempt($request->only('phone_number', 'password')))
         {
             return response()
                 ->json(['message' => 'Unauthorized'], 401);
         }
 
-        $driver = Driver::where('phone', $request['phone'])->firstOrFail();
 
-        $token = $driver->createToken('auth_token')->plainTextToken;
+        $user = User::where('phone_number', $request['phone'])->firstOrFail();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()
-            ->json(['message' => 'Hi '.$driver->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', 'id'=> $driver->id]);
+            ->json(['message' => 'Hi '.$user->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', 'id'=> $user->id]);
 
 
     }

@@ -20,6 +20,7 @@ class CreateDriversTable extends Migration
                 $table->string('phone_number')->unique();
                 $table->timestamp('email_verified_at')->nullable();
                 $table->string('password');
+                $table->enum('status', ['free', 'busy'])->default('free');
                 $table->rememberToken();
                 $table->timestamps();
             });

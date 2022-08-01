@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -35,6 +36,8 @@ Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify']
 
 Route::get('show', [OrderController::class, 'ordersByClient'])->middleware('auth:sanctum');
 Route::get('store', [OrderController::class, 'store'])->middleware('auth:sanctum');
+Route::get('send', [OrderController::class, 'SendOrder']);
+
 Route::get('ShowProfile', [UserController::class, 'ShowProfile'])->middleware('auth:sanctum');
 Route::get('EditProfile', [UserController::class, 'EditProfile'])->middleware('auth:sanctum');
-
+Route::get('accept', [DriverController::class, 'accept']);
