@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -58,10 +59,14 @@ class UserController extends Controller
                 ]
             );
     }
-    public function AddAdress(Request $request)
+    public function AddAddress(Request $request)
     {
         $id = Auth::id();
-
+        return Address::create( [
+            'user_id'=>$id,
+        'address'=>$request->address,
+                ]
+        );
     }
 
 

@@ -23,6 +23,18 @@ class DriverController extends Controller
             );
     }
     public function ignore(){
+    }
+
+    public function sendAddresses(Request $request)
+    {
+        $id= $request->DriverId;
+        $orders= Order::select('from_address', 'to_address')->where('driver_id', $id)->get();
+        $response=[
+            'message'=>"Those are the driver addresses",
+            'data'=>$orders,
+            'status'=>true,
+        ];
+        return response($response,200);
 
     }
 }

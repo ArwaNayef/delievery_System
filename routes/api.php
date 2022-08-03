@@ -40,4 +40,7 @@ Route::get('send', [OrderController::class, 'SendOrder']);
 
 Route::get('ShowProfile', [UserController::class, 'ShowProfile'])->middleware('auth:sanctum');
 Route::get('EditProfile', [UserController::class, 'EditProfile'])->middleware('auth:sanctum');
+Route::get('AddAddress', [UserController::class, 'AddAddress'])->middleware('auth:sanctum');
 Route::get('accept', [DriverController::class, 'accept']);
+Route::get('sendAddresses', [DriverController::class, 'sendAddresses']);
+
