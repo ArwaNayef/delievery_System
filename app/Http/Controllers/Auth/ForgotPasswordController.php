@@ -1,20 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\Auth\ValidationException;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-
-use Illuminate\Support\Str;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as RulesPassword;
+
 class ForgotPasswordController extends Controller
 {
-    public function forgotPassword(Request $request)
+   /* public function forgotPassword(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -69,5 +67,5 @@ class ForgotPasswordController extends Controller
 
     }
 
-
+*/
 }

@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Providers;
+namespace App\Listeners;
 
+use App\Events\Ordered;
 use App\Models\driver;
-use App\Providers\Ordered;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class OrdersToDrivers
 {
@@ -22,7 +20,7 @@ class OrdersToDrivers
     /**
      * Handle the event.
      *
-     * @param  \App\Providers\Ordered  $event
+     * @param  \App\Events\Ordered  $event
      * @return void
      */
     public function handle(Ordered $event)
@@ -35,7 +33,6 @@ class OrdersToDrivers
                 'body' => "This order which contains ".$order->details ."should be driveler by ". $order->time_to_deliever.
                 "to this place ".$order->to_address,
             ];
-
             \Mail::to($driver->email)->send(new \App\Mail\MyTestMail($details));
 
         }
