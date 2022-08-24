@@ -23,9 +23,10 @@ class AuthController extends Controller
 
         if($validator -> fails()){
             return response()-> json([
-                'message'=> 'validation fails',
-                'errors'=>$validator->errors()
-            ],422);
+                'message'=> $validator->errors(),
+                'data'=> null,
+                'status'=> false,
+            ],200);
         }
 
         $user=User::create([
@@ -39,7 +40,8 @@ class AuthController extends Controller
 
         return response()-> json([
             'message'=> 'Registration successfully',
-            'data'=> ['token' => $token->plainTextToken, 'user' => $user]
+            'data'=> ['token' => $token->plainTextToken, 'user' => $user],
+            'status'=> true,
         ],200);
         event(new Registered($user));
 
@@ -50,8 +52,12 @@ public function CustomerLogin(Request $request)
         //تدخيل بيانات خاطئة
         if (!Auth::attempt($request->only('email', 'password')))
         {
-            return response()
-                ->json(['message' => 'Unauthorized'], 401);
+            return response()-> json([
+                'message'=> 'Unauthorized',
+                'data'=> null,
+                'status'=> false,
+            ],200);
+
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
@@ -59,15 +65,14 @@ public function CustomerLogin(Request $request)
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()
-            ->json(['message' => 'Hi '.$user->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', 'id'=> $user->id]);
-
+            ->json(['message' => 'logged in',
+            'data'=>['access_token' => $token, 'token_type' => 'Bearer', 'id'=> $user->id]]);
 
     }
     public function CustomerLogout(Request $request)
     {
 
-        $request->user()->tokens()->delete();
-
+          Auth::logout();
         return response()->json(
             [
                 'message' => 'Logged out'

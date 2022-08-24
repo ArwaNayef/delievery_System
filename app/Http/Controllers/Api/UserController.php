@@ -23,7 +23,7 @@ class UserController extends Controller
     /**
      * Write code on Method
      *
-     * @return response()
+     * @return \Illuminate\Http\JsonResponse()
      */
     public function sendEmail(Request $request)
     {
@@ -36,15 +36,9 @@ class UserController extends Controller
 
     public function ShowProfile()
     {
-        $id = Auth::id();
-        return User::where('id', $id)
-            ->select(
-                [
-                    'name',
-                    'email',
-                    'Phone_number',
-                ]
-            )->get();
+
+        return response()->json(['user'=>Auth::user()]);
+
     }
     public function EditProfile(Request $request)
     {
