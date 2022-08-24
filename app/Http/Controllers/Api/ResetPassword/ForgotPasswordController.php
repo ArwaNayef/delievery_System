@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\ResetPassword;
+use App\Http\Controllers\Controller;
 use App\Mail\SendCodeResetPassword;
 use App\Models\ResetCodePassword;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 
 class ForgotPasswordController extends Controller
@@ -27,6 +27,9 @@ class ForgotPasswordController extends Controller
         // Send email to user
         Mail::to($request->email)->send(new SendCodeResetPassword($codeData->code));
 
-        return response(['message' => trans('passwords.sent')], 200);
+        return response(['message' => trans('passwords.sent'),
+            'data'=>null,
+            'status'=>true
+        ], 200);
     }
 }

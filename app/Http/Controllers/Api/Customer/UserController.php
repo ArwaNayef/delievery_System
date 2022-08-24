@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Customer;
 
+use App\Http\Controllers\Api\Mail;
+use App\Http\Controllers\Api\UserEmail;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Address;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
 
 
 class UserController extends Controller
@@ -30,14 +32,19 @@ class UserController extends Controller
         $users = User::whereIn("id", $request->ids)->get();
 
         Mail::to($users)->send(new UserEmail());
-        return response()->json(['success'=>'Send email successfully.']);
-
+        return response()->json([
+            'message'=>'Send email successfully.',
+            'data'=>null,
+            'status'=>true],
+            200);
     }
 
     public function ShowProfile()
     {
 
-        return response()->json(['user'=>Auth::user()]);
+        return response()->json([
+            'message'=>'profile',
+            'user'=>Auth::user()]);
 
     }
     public function EditProfile(Request $request)

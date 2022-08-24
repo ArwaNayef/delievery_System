@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 use App\Events\DriverRegistered;
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
@@ -64,9 +64,11 @@ public function CustomerLogin(Request $request)
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()
-            ->json(['message' => 'logged in',
-            'data'=>['access_token' => $token, 'token_type' => 'Bearer', 'id'=> $user->id]]);
+        return response()->json([
+            'message' => 'logged in',
+            'data'=>['access_token' => $token, 'token_type' => 'Bearer', 'id'=> $user->id],
+            'status'=>true,
+        ]);
 
     }
     public function CustomerLogout(Request $request)
@@ -75,8 +77,10 @@ public function CustomerLogin(Request $request)
           Auth::logout();
         return response()->json(
             [
-                'message' => 'Logged out'
-            ]
+                'message' => 'Logged out',
+                'data'=>null,
+                'status'=>true,
+            ],200
         );
 
     }
@@ -92,8 +96,9 @@ public function CustomerLogin(Request $request)
         if($validator -> fails()){
             return response()-> json([
                 'message'=> 'validation fails',
-                'errors'=>$validator->errors()
-            ],422);
+                'data'=>$validator->errors(),
+                'status'=>false,
+            ],200);
         }
 
         $driver=Driver::create([
@@ -109,7 +114,8 @@ public function CustomerLogin(Request $request)
         // User::create($request->getAttributes())->sendEmailVerificationNotification();
         return response()-> json([
             'message'=> 'Registration successfully',
-            'data'=> ['user' => $driver]
+            'data'=> ['user' => $driver],
+            'status'=>true
         ],200);
 
     }
@@ -122,8 +128,13 @@ public function CustomerLogin(Request $request)
         ]);
 
         if($validator->fails()){
-            return response()->json(['error' => $validator->errors()->all()]);
-        }
+            return response()->json([
+                'message'=>[$validator->errors()->all()],
+                'data'=>null,
+                'status'=>false
+            ],200
+                );}
+
         if(auth('driver')->attempt($request->only('phone_number', 'password'))){
 
             config(['auth.guards.api.provider' => 'driver']);
@@ -132,9 +143,19 @@ public function CustomerLogin(Request $request)
             $success =  $driver;
             $success['token'] =  $driver->createToken('MyApp',['driver'])->accessToken;
 
-            return response()->json($success."yes", 200);
+            return response()->json([
+                'message'=>$success."yes",
+                'data'=>null,
+                'status'=>true
+            ],200
+            );
         }else{
-            return response()->json(['error' => ['Phone and Password are Wrong.']], 200);
+            return response()->json([
+                'message'=>'Phone and Password are Wrong.',
+                'data'=>null,
+                'status'=>false
+            ],200
+            );
         }
     }
 

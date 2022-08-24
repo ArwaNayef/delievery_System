@@ -1,10 +1,11 @@
 <?php
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\ResetPassword;
 use App\Http\Controllers\Controller;
 use App\Models\ResetCodePassword;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Hash;
+use Illuminate\Http\Request;
+
 class ResetPasswordController extends Controller
 {
     public function __invoke(Request $request)
@@ -32,6 +33,8 @@ class ResetPasswordController extends Controller
         // delete current code
         $passwordReset->delete();
 
-        return response(['message' =>'password has been successfully reset'], 200);
+        return response(['message' =>'password has been successfully reset',
+            'data'=>null,
+            'status'=>true], 200);
     }
 }

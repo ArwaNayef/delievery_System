@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\ResetPassword;
 
 use App\Http\Controllers\Controller;
 use App\Models\ResetCodePassword;
@@ -20,12 +20,16 @@ class CodeCheckController extends Controller
         // check if it does not expired: the time is one hour
         if ($passwordReset->created_at > now()->addHour()) {
             $passwordReset->delete();
-            return response(['message' => trans('passwords.code_is_expire')], 422);
+            return response(['message' => trans('passwords.code_is_expire'),
+                'data'=>null,
+                'status'=>true],
+                200);
         }
 
         return response([
-            'code' => $passwordReset->code,
-            'message' => trans('passwords.code_is_valid')
+            'message' => trans('passwords.code_is_valid'),
+            'data'=>[ 'code' => $passwordReset->code],
+            'status'=>true
         ], 200);
     }
 }

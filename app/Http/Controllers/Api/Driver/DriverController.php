@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Driver;
 
 use App\Http\Controllers\Controller;
 use App\Models\order;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class DriverController extends Controller
 {
@@ -29,12 +27,13 @@ class DriverController extends Controller
     {
         $id= $request->DriverId;
         $orders= Order::select('from_address', 'to_address')->where('driver_id', $id)->get();
-        $response=[
+
+        return response()->json([
             'message'=>"Those are the driver addresses",
             'data'=>$orders,
             'status'=>true,
-        ];
-        return response($response,200);
+        ], 200
+        );
 
     }
 }
