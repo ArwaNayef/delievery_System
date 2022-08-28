@@ -21,7 +21,7 @@ class ResetPasswordController extends Controller
         /* check if it does not expired: the time is one hour */
         if ($passwordReset->created_at > now()->addHour()) {
             $passwordReset->delete();
-            return response(['message' => trans('passwords.code_is_expire')], 422);
+            return response(['message' => trans('passwords.code_is_expire')], 200);
         }
 
         // find user's email
@@ -33,7 +33,8 @@ class ResetPasswordController extends Controller
         // delete current code
         $passwordReset->delete();
 
-        return response(['message' =>'password has been successfully reset',
+        return response([
+            'message' =>'password has been successfully reset',
             'data'=>null,
             'status'=>true], 200);
     }

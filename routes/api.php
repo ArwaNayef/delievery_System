@@ -46,6 +46,6 @@ Route::get('accept', [DriverController::class, 'accept']);
 Route::get('sendAddresses', [DriverController::class, 'sendAddresses']);
 
 
-Route::post('password/email',  ForgotPasswordController::class)->middleware('auth:sanctum');
+Route::post('password/email',  ForgotPasswordController::class);
 Route::post('password/code/check', CodeCheckController::class)->middleware('auth:sanctum');
 Route::post('password/reset', ResetPasswordController::class)->middleware('auth:sanctum');
