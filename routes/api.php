@@ -1,15 +1,14 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\CodeCheckController;
-use App\Http\Controllers\Api\DriverController;
-use App\Http\Controllers\Api\ForgotPasswordController;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ResetPasswordController;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Customer\UserController;
+use App\Http\Controllers\Api\Driver\DriverController;
+use App\Http\Controllers\Api\Order\OrderController;
+use App\Http\Controllers\Api\ResetPassword\CodeCheckController;
+use App\Http\Controllers\Api\ResetPassword\ForgotPasswordController;
+use App\Http\Controllers\Api\ResetPassword\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +31,6 @@ Route::post('/auth/driver/register/', [AuthController::class, 'DriverRegister'])
 
 Route::post('/auth/customer/login/', [AuthController::class, 'CustomerLogin']);
 Route::post('/auth/customer/logout/', [AuthController::class, 'CustomerLogout']);
-//Route::post('forgotPassword', [ForgotPasswordController::class, 'forgotPassword']);
 
 
 Route::get('showOrders', [OrderController::class, 'ordersByClient'])->middleware('auth:sanctum');
@@ -46,11 +44,6 @@ Route::get('AddAddress', [UserController::class, 'AddAddress'])->middleware('aut
 
 Route::get('accept', [DriverController::class, 'accept']);
 Route::get('sendAddresses', [DriverController::class, 'sendAddresses']);
-/*Route::post('client/login',[LoginController::class, 'clientLogin'])->name('clientLogin');
-Route::group( ['prefix' => 'client','middleware' => ['auth:client-api','scopes:client'] ],function(){
-    // authenticated staff routes here
-    Route::get('dashboard',[LoginController::class, 'clientDashboard']);
-});*/
 
 
 Route::post('password/email',  ForgotPasswordController::class)->middleware('auth:sanctum');
