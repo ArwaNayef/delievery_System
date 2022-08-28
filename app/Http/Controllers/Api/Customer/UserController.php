@@ -41,10 +41,10 @@ class UserController extends Controller
 
     public function ShowProfile()
     {
-
         return response()->json([
             'message'=>'profile',
-            'user'=>Auth::user()]);
+            'data'=>Auth::user(),
+            'status'=> true]);
 
     }
     public function EditProfile(Request $request)
@@ -63,11 +63,13 @@ class UserController extends Controller
     public function AddAddress(Request $request)
     {
         $id = Auth::id();
-        return Address::create( [
-            'user_id'=>$id,
-        'address'=>$request->address,
-                ]
-        );
+
+        return response()->json([
+            'message'=>'New Address',
+            'data'=>['user_id'=>$id,
+                'address'=>$request->address],
+            'status'=>true],
+            200);
     }
 
 
