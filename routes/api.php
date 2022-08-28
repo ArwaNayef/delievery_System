@@ -34,12 +34,12 @@ Route::post('/auth/customer/logout/', [AuthController::class, 'CustomerLogout'])
 
 
 Route::get('showOrders', [OrderController::class, 'ordersByClient'])->middleware('auth:sanctum');
-Route::get('storeOrder', [OrderController::class, 'store'])->middleware('auth:sanctum');
+Route::post('storeOrder', [OrderController::class, 'store'])->middleware('auth:sanctum');
 
 
 Route::get('ShowProfile', [UserController::class, 'ShowProfile'])->middleware('auth:sanctum');
-Route::get('EditProfile', [UserController::class, 'EditProfile'])->middleware('auth:sanctum');
-Route::get('AddAddress', [UserController::class, 'AddAddress'])->middleware('auth:sanctum');
+Route::post('EditProfile', [UserController::class, 'EditProfile'])->middleware('auth:sanctum');
+Route::post('AddAddress', [UserController::class, 'AddAddress'])->middleware('auth:sanctum');
 
 
 Route::get('accept', [DriverController::class, 'accept']);

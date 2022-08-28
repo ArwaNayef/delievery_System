@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Order;
 
 use App\Events\Ordered;
 use App\Http\Controllers\Controller;
-use App\Models\order;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
