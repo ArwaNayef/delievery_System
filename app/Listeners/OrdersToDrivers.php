@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\Ordered;
-use App\Models\driver;
+use App\Models\Driver;
 
 class OrdersToDrivers
 {

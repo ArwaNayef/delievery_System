@@ -122,7 +122,7 @@ public function CustomerLogin(Request $request)
 
     public function DriverLogin(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+             $validator = Validator::make($request->all(), [
             'phone_number' => 'required',
             'password' => 'required',
         ]);
@@ -138,8 +138,18 @@ public function CustomerLogin(Request $request)
         if(auth('driver')->attempt($request->only('phone_number', 'password'))){
 
             config(['auth.guards.api.provider' => 'driver']);
+            //$logged= Driver::where('phone_number', $request['phone_number'])->first();
+                //Driver.where('phone_number', $request['phone_number']);
+            $driver = Driver::where('phone_number', $request['phone_number'])->first();
 
-            $driver = Driver::find(Auth::id());
+            $token = $driver->createToken('auth_token')->accessToken;
+
+           return response()->json([
+                'message' => 'logged in',
+                'data'=>['access_token' => $token, 'token_type' => 'Bearer', 'id'=> $driver->id],
+                'status'=>true,
+            ],200);}
+           /*
             $success =  $driver;
             $success['token'] =  $driver->createToken('MyApp',['driver'])->accessToken;
 
@@ -149,7 +159,7 @@ public function CustomerLogin(Request $request)
                 'status'=>true
             ],200
             );
-        }else{
+        }*/else{
             return response()->json([
                 'message'=>'Phone and Password are Wrong.',
                 'data'=>null,
