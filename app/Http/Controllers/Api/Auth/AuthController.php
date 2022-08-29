@@ -109,9 +109,6 @@ public function CustomerLogin(Request $request)
             ]
         );
         event(new DriverRegistered($driver));
-        //event(new Registered($user));
-       // $token = $driver->createToken('auth_token');
-        // User::create($request->getAttributes())->sendEmailVerificationNotification();
         return response()-> json([
             'message'=> 'Registration successfully',
             'data'=> ['user' => $driver],
@@ -135,31 +132,20 @@ public function CustomerLogin(Request $request)
             ],200
                 );}
 
-        if(auth('driver')->attempt($request->only('phone_number', 'password'))){
+        if(auth('driver')->attempt($request->only('phone_number', 'password'))) {
 
             config(['auth.guards.api.provider' => 'driver']);
-            //$logged= Driver::where('phone_number', $request['phone_number'])->first();
-                //Driver.where('phone_number', $request['phone_number']);
             $driver = Driver::where('phone_number', $request['phone_number'])->first();
 
             $token = $driver->createToken('auth_token')->accessToken;
 
-           return response()->json([
-                'message' => 'logged in',
-                'data'=>['access_token' => $token, 'token_type' => 'Bearer', 'id'=> $driver->id],
-                'status'=>true,
-            ],200);}
-           /*
-            $success =  $driver;
-            $success['token'] =  $driver->createToken('MyApp',['driver'])->accessToken;
-
             return response()->json([
-                'message'=>$success."yes",
-                'data'=>null,
-                'status'=>true
-            ],200
-            );
-        }*/else{
+                'message' => 'logged in',
+                'data' => ['access_token' => $token, 'token_type' => 'Bearer', 'id' => $driver->id],
+                'status' => true,
+            ], 200);
+        }
+        else{
             return response()->json([
                 'message'=>'Phone and Password are Wrong.',
                 'data'=>null,
